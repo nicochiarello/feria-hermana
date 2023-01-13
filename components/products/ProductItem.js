@@ -1,7 +1,6 @@
 import React from "react";
 
 const ProductItem = ({ product }) => {
-  console.log({ product });
   return (
     <div className="w-full py-4 bg-red-600 flex flex-col gap-5 px-1">
       <div className="flex gap-2 h-[8rem]">

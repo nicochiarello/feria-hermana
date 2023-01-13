@@ -3,6 +3,7 @@ import axios from "axios";
 
 const Fetcher = ({ setData, setLoader, url, page, setNbPages }) => {
   useEffect(() => {
+    setLoader(true)
     let source = axios.CancelToken.source();
     const loadData = async () => {
       try {

@@ -8,7 +8,7 @@ const ProductsPagination = ({ pages }) => {
       <div className="flex ">
         {Array.from({ length: pages }, (i, key) => (
           <span
-          className={`${page == key + 1 && "bg-red-600"} rounded-full flex items-center justify-center px-1`}
+          className={`${page == key + 1 && "bg-red-600"} rounded-full flex items-center justify-center px-1 cursor-pointer`}
             onClick={() =>
               router.push({
                 pathname: router.pathname,
