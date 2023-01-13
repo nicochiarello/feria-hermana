@@ -5,6 +5,7 @@ import ProductsPagination from "./ProductsPagination";
 import ProductItem from "./ProductItem";
 import { ClipLoader } from "react-spinners";
 import Popup from "../popup/Popup";
+import CreatorHandler from "./CreatorHandler";
 
 const Products = () => {
   const router = useRouter();
@@ -17,11 +18,7 @@ const Products = () => {
   return (
     <div className="w-full h-full overflow-y-scroll">
       {popup && (
-        <Popup
-          onClose={() => setPopup(false)}
-          data={{ inputs: [{label: "Nombre", stateName: "name"},{label: "Precio", stateName: "price"}], buttons: [] }}
-          onSubmit={(data)=> console.log("Data to send", data) }
-        />
+        <CreatorHandler onClose={()=> setPopup(false)} product={{}} type={0} />
       )}
 
       <div
