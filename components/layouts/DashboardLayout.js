@@ -7,7 +7,7 @@ const DashboardLayout = ({section, children}) => {
   return (
     <div className='w-full h-full relative'>
         <Navbar section={section}/>
-        <article className='w-full h-[calc(100vh-4rem)] bg-green-500 pb-2'>
+        <article className='w-full h-[calc(100vh-4rem)] pb-2'>
             {children}
         </article>
     </div>

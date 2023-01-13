@@ -14,11 +14,21 @@ const Products = () => {
   const [loader, setLoader] = useState(false);
   const [nbPages, setNbPages] = useState();
   const [popup, setPopup] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [type, setType] = useState(0);
 
   return (
     <div className="w-full h-full overflow-y-scroll">
       {popup && (
-        <CreatorHandler onClose={()=> setPopup(false)} product={{}} type={0} />
+        <CreatorHandler
+          onClose={() => {
+            setType(0);
+            setPopup(false);
+            setSelectedItem(null);
+          }}
+          product={selectedItem}
+          type={type}
+        />
       )}
 
       <div
@@ -43,7 +53,17 @@ const Products = () => {
           </div>
         ) : products.length > 0 ? (
           products.map((i) => {
-            return <ProductItem key={i._id} product={i} />;
+            return (
+              <ProductItem
+                key={i._id}
+                product={i}
+                onUpdate={(product) => {
+                  setType(1);
+                  setSelectedItem(product);
+                  setPopup(true);
+                }}
+              />
+            );
           })
         ) : (
           <div className="w-full h-full flex items-center justify-center">

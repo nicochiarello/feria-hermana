@@ -4,7 +4,7 @@ const ProductsPagination = ({ pages }) => {
   const router = useRouter();
   let {page} = router.query
   return (
-    <div className="w-full py-3 bg-blue-400 flex items-center justify-end px-4">
+    <div className="w-full py-3  flex items-center justify-end px-4">
       <div className="flex ">
         {Array.from({ length: pages }, (i, key) => (
           <span
