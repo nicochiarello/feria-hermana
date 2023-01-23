@@ -7,17 +7,20 @@ const CreatorHandler = ({ type, product, onClose }) => {
       return {
         data: {
           inputs: [
-            { label: "Nombre", stateName: "name" },
-            { label: "Precio", stateName: "price" },
-            { label: "Descripción", stateName: "description" },
-            { label: "Categoría", stateName: "category" },
-            { label: "Talle", stateName: "size" },
-            { label: "Reserved", stateName: "reserved" },
-            { label: "Sale", stateName: "sale" },
+            { type: 0, label: "Nombre", stateName: "name" },
+            { type: 1, label: "Precio", stateName: "price"  },
+            { type: 0, label: "Descripción", stateName: "description" },
+            { type: 2, label: "Categoría", stateName: "category", options: [{label: "Categoria 1",value: 'cat1'}, {label: "Categoria 2",value: 'cat2'}] },
+            { type: 0, label: "Talle", stateName: "size" },
+            { type: 2, label: "Sale", stateName: "sale", options: [{value: true, label: "Si"},{value: false, label: "No"} ] },
             { label: "Visible", stateName: "view" },
           ],
           buttons: [
-            {label: "Crear", onSubmit: (product) => console.log("EL product a crear es", product)}
+            {
+              label: "Crear",
+              onSubmit: (product) =>
+                console.log("EL product a crear es", product),
+            },
           ],
         },
         initialState: {},
@@ -27,17 +30,20 @@ const CreatorHandler = ({ type, product, onClose }) => {
       return {
         data: {
           inputs: [
-            { label: "Nombre", stateName: "name" },
-            { label: "Precio", stateName: "price" },
-            { label: "Descripción", stateName: "description" },
-            { label: "Categoría", stateName: "category" },
-            { label: "Talle", stateName: "size" },
-            { label: "Reserved", stateName: "reserved" },
-            { label: "Sale", stateName: "sale" },
-            { label: "Visible", stateName: "view" },
+            { type: 0, label: "Nombre", stateName: "name" },
+            { type: 1, label: "Precio", stateName: "price"  },
+            { type: 0, label: "Descripción", stateName: "description" },
+            { type: 2, label: "Categoría", stateName: "category", options: [{label: "Categoria 1",value: 'cat1'}, {label: "Categoria 2",value: 'cat2'}] },
+            { type: 0, label: "Talle", stateName: "size" },
+            { type: 2, label: "Sale", stateName: "sale", options: [{value: true, label: "Si"},{value: false, label: "No"} ] },
+            { type: 2, label: "Visible", stateName: "view", options: [{value: true, label: "Si"},{value: false, label: "No"} ] },
           ],
           buttons: [
-            {label: "Editar", onSubmit: (product) => console.log("EL product a editar es", product)}
+            {
+              label: "Editar",
+              onSubmit: (product) =>
+                console.log("EL product a editar es", product),
+            },
           ],
         },
         initialState: { ...product },
