@@ -1,4 +1,5 @@
 import React from "react";
+import ImagesHandler from "./images-handler/ImagesHandler";
 
 const InputsTypesHandler = ({ input, setStateData, stateData }) => {
   const textInput = (i) => {
@@ -44,8 +45,8 @@ const InputsTypesHandler = ({ input, setStateData, stateData }) => {
       <div className="flex flex-col">
         <label>{i.label}</label>
         <select
-        value={stateData[i.stateName]}
-        className="w-full py-1 px-2 rounded-lg"
+          value={stateData[i.stateName]}
+          className="w-full py-1 px-2 rounded-lg"
           onChange={(e) =>
             setStateData({
               ...stateData,
@@ -57,7 +58,11 @@ const InputsTypesHandler = ({ input, setStateData, stateData }) => {
             Seleccione una opcion
           </option>
           {i.options.map((i, key) => {
-            return <option value={i.value} key={key}>{i.label}</option>;
+            return (
+              <option value={i.value} key={key}>
+                {i.label}
+              </option>
+            );
           })}
         </select>
       </div>
@@ -71,6 +76,8 @@ const InputsTypesHandler = ({ input, setStateData, stateData }) => {
       return numberInput(input);
     case 2:
       return selectInput(input);
+    case 3:
+      return <ImagesHandler setStateData={setStateData} stateData={stateData} />;
   }
 };
 
