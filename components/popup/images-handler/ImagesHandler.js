@@ -1,35 +1,32 @@
 import { useState, useEffect, useRef } from "react";
 
-const ImagesHandler = ({setStateData, stateData}) => {
+const ImagesHandler = ({ setStateData, stateData }) => {
   const [preview, setPreview] = useState({});
   const [images, setImages] = useState({});
   const fileInputRef = useRef();
 
-  console.log({preview})
+
+  console.log({stateData})
+  console.log({ preview });
   useEffect(() => {
-    if (images) {
-        let previewAux = {}
-        Object.entries(images).forEach((i)=>{
-            console.log(i[0], "esto llega")
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              setPreview({...preview, [i[0]]: reader.result} );
-            };
-            reader.readAsDataURL(i[1]);
-            console.log("cambio a", preview )
-        
+    let aux = {}
+    if(stateData.images){
+      Object.entries(stateData.images).forEach((i)=>{
+        aux = ({...aux, [i[0]]: i[1].secureUrl})
       })
-    } else {
-      setPreview(null);
     }
-  }, [images]);
+
+    setPreview(aux)
+  }, []);
+
+
   return (
     <div>
       {" "}
       <div
         className={` flex flex-col py-2 gap-6 max-h-[700px] overflow-y-scroll`}
       >
-        <div className="flex items-center justify-center w-full">
+        <div className="flex flex-col items-center justify-center w-full">
           <label
             for="dropzone-file"
             className="flex flex-col items-center justify-center w-[25rem] h-[28rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
@@ -37,7 +34,7 @@ const ImagesHandler = ({setStateData, stateData}) => {
             {preview ? (
               <img
                 className="w-full h-full rounded-lg object-cover"
-                src={preview}
+                src={preview[0]}
               ></img>
             ) : (
               <>
@@ -57,7 +54,8 @@ const ImagesHandler = ({setStateData, stateData}) => {
                   ></path>
                 </svg>
                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                  <span className="font-semibold">Sube una imagen</span> o arrastra y suelta
+                  <span className="font-semibold">Sube una imagen</span> o
+                  arrastra y suelta
                 </p>
               </>
             )}
@@ -65,22 +63,38 @@ const ImagesHandler = ({setStateData, stateData}) => {
             <input
               ref={fileInputRef}
               onChange={(event) => {
-                console.log(event.target.files)
                 const files = event.target.files;
                 if (files.length > 0) {
                   setImages(files);
+                  let previewImagesAux = {};
 
-                    setStateData({...stateData, images: files  })
+                  console.log(Object.entries(files));
+
+                  Object.entries(files).forEach((i) => {
+                    let blob = URL.createObjectURL(i[1]);
+                    previewImagesAux = { ...previewImagesAux, [i[0]]: blob };
+                  });
+
+                  setPreview(previewImagesAux);
+
+                  setStateData({ ...stateData, images: files });
                 } else {
                   setImages(null);
                 }
               }}
               id="dropzone-file"
               type="file"
-              multiple 
+              multiple
               className="hidden"
             />
           </label>
+          <div className="w-full h-[10rem] bg-red-600 flex gap-4">
+            {Object.entries(preview).map((i) => {
+              if (i[0] !== "0") {
+                return <img className="w-[15rem]" key={i} src={i[1]} alt="" />;
+              }
+            })}
+          </div>
         </div>
       </div>
     </div>
