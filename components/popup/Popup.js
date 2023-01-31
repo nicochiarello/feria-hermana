@@ -1,7 +1,7 @@
 import { useState } from "react";
 import InputsTypesHandler from "./InputsTypesHandler";
 
-const Popup = ({ onClose, data, onSubmit, initialState, label }) => {
+const Popup = ({ onClose, data, onSubmit, initialState, label ,errors = {},}) => {
   const [stateData, setStateData] = useState(initialState);
   return (
     <div className="w-full h-[100vh] absolute z-50 top-0 left-0 bg-black flex items-center justify-center">
@@ -15,14 +15,19 @@ const Popup = ({ onClose, data, onSubmit, initialState, label }) => {
         </div>
         <div className="w-full min-h-[calc(100vh-9rem)] flex flex-col gap-3 py-3 bg-orange-300 text-lg px-1">
           {data.inputs.map((i, key) => {
-            
             return (
-              <InputsTypesHandler key={key} input={i} setStateData={setStateData} stateData={stateData}/>
+              <InputsTypesHandler
+                key={key}
+                input={i}
+                setStateData={setStateData}
+                stateData={stateData}
+                errors = {errors}
+              />
             );
           })}
         </div>
         {data.buttons.map((i, key) => {
-            console.log(i)
+          console.log(i);
           return (
             <div
               key={key}

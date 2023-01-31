@@ -1,7 +1,9 @@
 import React from "react";
 import ImagesHandler from "./images-handler/ImagesHandler";
 
-const InputsTypesHandler = ({ input, setStateData, stateData }) => {
+const InputsTypesHandler = ({ input, setStateData, stateData, errors }) => {
+  console.log(errors[input.stateName]);
+  console.log(input);
   const textInput = (i) => {
     return (
       <div className="flex flex-col">
@@ -15,8 +17,15 @@ const InputsTypesHandler = ({ input, setStateData, stateData }) => {
             })
           }
           placeholder={i.label}
-          className="w-full py-1 px-2 rounded-lg"
+          className={`w-full py-1 px-2 rounded-lg ${
+            errors[input.stateName] && "border border-red-600"
+          }  `}
         />
+        {errors[i.stateName] && (
+          <span className="text-sm text-red-600">
+            {errors[i.stateName].message}
+          </span>
+        )}
       </div>
     );
   };
@@ -34,8 +43,15 @@ const InputsTypesHandler = ({ input, setStateData, stateData }) => {
             })
           }
           placeholder={i.label}
-          className="w-full py-1 px-2 rounded-lg"
+          className={`w-full py-1 px-2 rounded-lg ${
+            errors[input.stateName] && "border border-red-600"
+          }  `}
         />
+        {errors[i.stateName] && (
+          <span className="text-sm text-red-600">
+            {errors[i.stateName].message}
+          </span>
+        )}
       </div>
     );
   };
@@ -77,7 +93,9 @@ const InputsTypesHandler = ({ input, setStateData, stateData }) => {
     case 2:
       return selectInput(input);
     case 3:
-      return <ImagesHandler setStateData={setStateData} stateData={stateData} />;
+      return (
+        <ImagesHandler setStateData={setStateData} stateData={stateData} />
+      );
   }
 };
 

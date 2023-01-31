@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 const ImagesHandler = ({ setStateData, stateData }) => {
   const [preview, setPreview] = useState({});
   const [images, setImages] = useState({});
+  const [imagesToUpdate, setImagesToUpdate] = useState({})
   const fileInputRef = useRef();
 
 
@@ -65,6 +66,8 @@ const ImagesHandler = ({ setStateData, stateData }) => {
               onChange={(event) => {
                 const files = event.target.files;
                 if (files.length > 0) {
+                  // hacer un objeto que guarde los nombres originales en la posicion que se quiere cambiar
+                  console.log(files)
                   setImages(files);
                   let previewImagesAux = {};
 
@@ -90,6 +93,7 @@ const ImagesHandler = ({ setStateData, stateData }) => {
           </label>
           <div className="w-full h-[10rem] bg-red-600 flex gap-4">
             {Object.entries(preview).map((i) => {
+              // Hacer input que cambie la imagen en la posicion seleccionada 
               if (i[0] !== "0") {
                 return <img className="w-[15rem]" key={i} src={i[1]} alt="" />;
               }

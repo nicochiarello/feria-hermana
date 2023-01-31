@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Popup from "../popup/Popup";
+import { createProduct } from "../../utils/api/product.routes";
+import { toast } from "react-hot-toast";
 
-const CreatorHandler = ({ type, product, onClose }) => {
+const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
   const propsCreator = (type, product) => {
     if (type === 0) {
       return {
@@ -35,12 +37,32 @@ const CreatorHandler = ({ type, product, onClose }) => {
           buttons: [
             {
               label: "Crear",
-              onSubmit: (product) =>
-                console.log("EL product a crear es", product),
+              onSubmit: (product) => {
+                let formData = new FormData();
+
+                for (let item in product) {
+                  if (item !== "images") formData.append(item, product[item]);
+                }
+
+                for (let image of product.images) {
+                  formData.append("images", image);
+                }
+
+                createProduct(
+                  formData,
+                  setProducts,
+                  setErrors,
+                  setLoader,
+                  () => {
+                    onClose();
+                    toast.success("Creado exitosamente");
+                  }
+                );
+              },
             },
           ],
         },
-        initialState: {images: {}},
+        initialState: { images: {} },
       };
     }
     if (type === 1) {
@@ -94,6 +116,7 @@ const CreatorHandler = ({ type, product, onClose }) => {
   };
 
   const [props, setProps] = useState(propsCreator(type, product));
+  const [errors, setErrors] = useState({});
   return (
     <Popup
       label={type === 0 ? "Crear Producto" : "Editar Producto"}
@@ -101,6 +124,7 @@ const CreatorHandler = ({ type, product, onClose }) => {
       data={props.data}
       onSubmit={(data) => console.log("Data to send", data)}
       initialState={props.initialState}
+      errors={errors}
     />
   );
 };

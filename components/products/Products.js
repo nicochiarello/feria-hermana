@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import ProductsPagination from "./ProductsPagination";
 import ProductItem from "./ProductItem";
 import { ClipLoader } from "react-spinners";
-import Popup from "../popup/Popup";
 import CreatorHandler from "./CreatorHandler";
+import { Toaster, toast } from "react-hot-toast";
+import Warning from "../warning/Warning";
+import { deleteProduct } from "../../utils/api/product.routes";
 
 const Products = () => {
   const router = useRouter();
@@ -16,9 +18,11 @@ const Products = () => {
   const [popup, setPopup] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [type, setType] = useState(0);
+  const [warningPopup, setWarningPopup] = useState(false);
 
   return (
     <div className="w-full h-full overflow-y-scroll">
+      <Toaster />
       {popup && (
         <CreatorHandler
           onClose={() => {
@@ -28,6 +32,27 @@ const Products = () => {
           }}
           product={selectedItem}
           type={type}
+          setProducts={setProducts}
+          setLoader={setLoader}
+        />
+      )}
+
+      {warningPopup && (
+        <Warning
+          onClose={() => setWarningPopup(false)}
+          data={{
+            title: `Eliminar producto`,
+            info: `Eliminar este producto permanentemente? No puedes rehacer esto`,
+          }}
+          onSubmit={() => {
+            setWarningPopup(false);
+            setLoader(true);
+            deleteProduct(selectedItem._id, setProducts, setLoader, () => {
+              setWarningPopup(false);
+              toast.success("Eliminado exitosamente");
+     
+            });
+          }}
         />
       )}
 
@@ -61,6 +86,10 @@ const Products = () => {
                   setType(1);
                   setSelectedItem(product);
                   setPopup(true);
+                }}
+                onDelete={(product)=>{
+                  setSelectedItem(product);
+                  setWarningPopup(true)
                 }}
               />
             );

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProductItem = ({ product, onUpdate }) => {
+const ProductItem = ({ product, onUpdate, onDelete }) => {
   return (
     <div className="w-full py-4 border-y flex flex-col gap-5 px-1">
       <div className="flex gap-2 h-[8rem]">
@@ -25,7 +25,7 @@ const ProductItem = ({ product, onUpdate }) => {
         <div onClick={()=> onUpdate(product)} className="w-full bg-blue-600 py-3 text-center rounded-lg">
           <p>Editar</p>
         </div>
-        <div className="w-full text-center bg-red-600 py-3 rounded-lg">
+        <div onClick={()=> onDelete(product)} className="w-full text-center bg-red-600 py-3 rounded-lg">
           <p>Eliminar</p>
         </div>
       </div>
