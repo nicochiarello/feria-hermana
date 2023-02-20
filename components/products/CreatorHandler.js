@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Popup from "../popup/Popup";
-import { createProduct } from "../../utils/api/product.routes";
+import { createProduct, updateProduct } from "../../utils/api/product.routes";
 import { toast } from "react-hot-toast";
 
 const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
@@ -38,14 +38,18 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
             {
               label: "Crear",
               onSubmit: (product) => {
+         
                 let formData = new FormData();
 
                 for (let item in product) {
                   if (item !== "images") formData.append(item, product[item]);
                 }
 
-                for (let image of product.images) {
-                  formData.append("images", image);
+                if (Object.values(product.images).length) {
+                  for (let image of Object.values(product.images)) {
+                    console.log(image)
+                    formData.append("images", image);
+                  }
                 }
 
                 createProduct(
@@ -105,8 +109,40 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
           buttons: [
             {
               label: "Editar",
-              onSubmit: (product) =>
-                console.log("EL product a editar es", product),
+              onSubmit: (product) => {
+                console.log({ product });
+                let entries = Object.entries(product);
+                let images = Object.entries(product.images);
+                console.log({ product });
+                let formData = new FormData();
+
+                for (let item of entries) {
+                  if (item[0] !== "images") formData.append(item[0], item[1]);
+                  if (item[0] === "updatedImages") {
+                    formData.append(item[0], JSON.stringify(item[1]));
+                  }
+                }
+
+                for (let image of images) {
+                  console.log(image[1], typeof image[1]);
+                  if (image[1] instanceof File) {
+                    formData.append("images", image[1]);
+                  }
+                }
+
+                updateProduct(formData);
+
+                // createProduct(
+                //   formData,
+                //   setProducts,
+                //   setErrors,
+                //   setLoader,
+                //   () => {
+                //     onClose();
+                //     toast.success("Creado exitosamente");
+                //   }
+                // );
+              },
             },
           ],
         },

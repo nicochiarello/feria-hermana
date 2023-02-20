@@ -35,6 +35,31 @@ export const createProduct = (
     .catch((err) => setErrors(err.response.data));
 };
 
+export const updateProduct = async (
+  updatedProduct,
+  setProducts,
+  setErrors,
+  setLoader,
+  cb
+) => {
+  // setLoader(true);
+  // let { _id } = updatedProduct;
+  console.log(updatedProduct)
+  const id = updatedProduct.get("_id")
+  console.log(id)
+  
+  // for (const value of updatedProduct.values()) {
+  //   console.log(value);
+  // }
+  axios
+    .put(
+      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/product/update/${id}`,
+      updatedProduct
+    )
+    .then((res) => console.log("Done!"));
+  // .catch((err) => setErrors(err.response.data));
+};
+
 export const deleteProduct = (id, setProducts, setLoader, cb) => {
   axios
     .delete(

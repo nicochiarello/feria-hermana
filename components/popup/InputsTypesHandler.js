@@ -2,8 +2,6 @@ import React from "react";
 import ImagesHandler from "./images-handler/ImagesHandler";
 
 const InputsTypesHandler = ({ input, setStateData, stateData, errors }) => {
-  console.log(errors[input.stateName]);
-  console.log(input);
   const textInput = (i) => {
     return (
       <div className="flex flex-col">

@@ -3,6 +3,8 @@ import InputsTypesHandler from "./InputsTypesHandler";
 
 const Popup = ({ onClose, data, onSubmit, initialState, label ,errors = {},}) => {
   const [stateData, setStateData] = useState(initialState);
+
+  console.log({stateData})
   return (
     <div className="w-full h-[100vh] absolute z-50 top-0 left-0 bg-black flex items-center justify-center">
       <div
@@ -27,7 +29,6 @@ const Popup = ({ onClose, data, onSubmit, initialState, label ,errors = {},}) =>
           })}
         </div>
         {data.buttons.map((i, key) => {
-          console.log(i);
           return (
             <div
               key={key}

@@ -1,25 +1,40 @@
 import { useState, useEffect, useRef } from "react";
+import Resizer from "react-image-file-resizer";
 
 const ImagesHandler = ({ setStateData, stateData }) => {
   const [preview, setPreview] = useState({});
   const [images, setImages] = useState({});
-  const [imagesToUpdate, setImagesToUpdate] = useState({})
+  const [imagesToUpdate, setImagesToUpdate] = useState({});
   const fileInputRef = useRef();
+  const [updatedImages, setUpdatedImages] = useState({});
 
-
-  console.log({stateData})
-  console.log({ preview });
   useEffect(() => {
-    let aux = {}
-    if(stateData.images){
-      Object.entries(stateData.images).forEach((i)=>{
-        aux = ({...aux, [i[0]]: i[1].secureUrl})
-      })
+    let aux = {};
+    if (stateData.images) {
+      Object.entries(stateData.images).forEach((i) => {
+        aux = { ...aux, [i[0]]: i[1].secureUrl };
+      });
     }
 
-    setPreview(aux)
+    setPreview(aux);
   }, []);
 
+  const resizeFile = (file) => {
+    return new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        400,
+        500,
+        "JPEG",
+        80,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        "file"
+      );
+    });
+  };
 
   return (
     <div>
@@ -63,15 +78,12 @@ const ImagesHandler = ({ setStateData, stateData }) => {
 
             <input
               ref={fileInputRef}
-              onChange={(event) => {
+              onChange={async (event) => {
                 const files = event.target.files;
+
                 if (files.length > 0) {
-                  // hacer un objeto que guarde los nombres originales en la posicion que se quiere cambiar
-                  console.log(files)
                   setImages(files);
                   let previewImagesAux = {};
-
-                  console.log(Object.entries(files));
 
                   Object.entries(files).forEach((i) => {
                     let blob = URL.createObjectURL(i[1]);
@@ -80,7 +92,21 @@ const ImagesHandler = ({ setStateData, stateData }) => {
 
                   setPreview(previewImagesAux);
 
-                  setStateData({ ...stateData, images: files });
+                  let filesAux = {};
+                  let populateFiles = async () => {
+                    for (let file of Object.entries(files)) {
+                      let resizedFile = await resizeFile(file[1]);
+                      console.log({ resizedFile });
+                      filesAux[file[0]] = resizedFile;
+                    }
+                  };
+
+                  await populateFiles();
+
+
+                  
+
+                  setStateData({ ...stateData, images: filesAux });
                 } else {
                   setImages(null);
                 }
@@ -92,10 +118,43 @@ const ImagesHandler = ({ setStateData, stateData }) => {
             />
           </label>
           <div className="w-full h-[10rem] bg-red-600 flex gap-4">
-            {Object.entries(preview).map((i) => {
-              // Hacer input que cambie la imagen en la posicion seleccionada 
+            {Object.entries(preview).map((i, key) => {
+              // Hacer input que cambie la imagen en la posicion seleccionada
               if (i[0] !== "0") {
-                return <img className="w-[15rem]" key={i} src={i[1]} alt="" />;
+                return (
+                  <label
+                    className="flex flex-col overflow-hidden items-center justify-center w-[25rem] h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
+                    key={key}
+                  >
+                    <input
+                      onChange={(event) => {
+                        console.log("Hay cambio");
+                        let file = event.target.files[0];
+                        let fileName = file.name;
+                        let blob = URL.createObjectURL(file);
+                        let index = i[0];
+                        setPreview({ ...preview, [index]: blob });
+                        setUpdatedImages({
+                          ...updatedImages,
+                          [index]: fileName,
+                        });
+
+                        setStateData({
+                          ...stateData,
+                          images: { ...stateData.images, [index]: file },
+                          updatedImages: {
+                            ...updatedImages,
+                            [index]: fileName,
+                          },
+                        });
+                      }}
+                      className="hidden"
+                      id="dropzone-file"
+                      type="file"
+                    />
+                    <img className="w-[15rem]" src={i[1]} alt="" />
+                  </label>
+                );
               }
             })}
           </div>
