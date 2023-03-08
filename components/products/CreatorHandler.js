@@ -155,7 +155,6 @@ const CreatorHandler = ({
       onClose={() => onClose()}
       loader={loader}
       data={props.data}
-      onSubmit={(data) => console.log("Data to send", data)}
       initialState={props.initialState}
       errors={errors}
     />
