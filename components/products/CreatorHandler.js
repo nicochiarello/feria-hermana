@@ -3,7 +3,14 @@ import Popup from "../popup/Popup";
 import { createProduct, updateProduct } from "../../utils/api/product.routes";
 import { toast } from "react-hot-toast";
 
-const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
+const CreatorHandler = ({
+  type,
+  product,
+  onClose,
+  setProducts,
+  setLoader,
+  loader,
+}) => {
   const propsCreator = (type, product) => {
     if (type === 0) {
       return {
@@ -38,7 +45,6 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
             {
               label: "Crear",
               onSubmit: (product) => {
-         
                 let formData = new FormData();
 
                 for (let item in product) {
@@ -47,7 +53,7 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
 
                 if (Object.values(product.images).length) {
                   for (let image of Object.values(product.images)) {
-                    console.log(image)
+                    console.log(image);
                     formData.append("images", image);
                   }
                 }
@@ -110,10 +116,9 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
             {
               label: "Editar",
               onSubmit: (product) => {
-                console.log({ product });
                 let entries = Object.entries(product);
                 let images = Object.entries(product.images);
-                console.log({ product });
+
                 let formData = new FormData();
 
                 for (let item of entries) {
@@ -124,24 +129,15 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
                 }
 
                 for (let image of images) {
-                  console.log(image[1], typeof image[1]);
                   if (image[1] instanceof File) {
                     formData.append("images", image[1]);
                   }
                 }
 
-                updateProduct(formData);
-
-                // createProduct(
-                //   formData,
-                //   setProducts,
-                //   setErrors,
-                //   setLoader,
-                //   () => {
-                //     onClose();
-                //     toast.success("Creado exitosamente");
-                //   }
-                // );
+                updateProduct(formData, setProducts, setLoader, () => {
+                  onClose();
+                  toast.success("Editado exitosamente");
+                });
               },
             },
           ],
@@ -157,6 +153,7 @@ const CreatorHandler = ({ type, product, onClose, setProducts, setLoader }) => {
     <Popup
       label={type === 0 ? "Crear Producto" : "Editar Producto"}
       onClose={() => onClose()}
+      loader={loader}
       data={props.data}
       onSubmit={(data) => console.log("Data to send", data)}
       initialState={props.initialState}

@@ -1,14 +1,22 @@
 import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 import InputsTypesHandler from "./InputsTypesHandler";
+import { useRef } from "react";
 
-const Popup = ({ onClose, data, onSubmit, initialState, label ,errors = {},}) => {
+const Popup = ({ onClose, data, initialState, label, errors = {}, loader }) => {
   const [stateData, setStateData] = useState(initialState);
+  const popupRef = useRef()
 
-  console.log({stateData})
+  const handleClose = (e) => {
+    if(e.target === popupRef.current){
+      onClose()
+    }
+  }
+
   return (
-    <div className="w-full h-[100vh] absolute z-50 top-0 left-0 bg-black flex items-center justify-center">
+    <div onClick={handleClose} ref={popupRef} className="w-full min-h-[100vh] absolute z-50 top-0 left-0 popup-bg flex items-center justify-center">
       <div
-        className="w-full h-full  bg-red-600 
+        className="w-full h-full md:w-[700px] md:h-[700px]  bg-red-600 
        md:rounded-xl overflow-scroll"
       >
         <div className="w-full h-[4.5rem] bg-gray-600 px-2 text-xl flex justify-between items-center">
@@ -23,7 +31,7 @@ const Popup = ({ onClose, data, onSubmit, initialState, label ,errors = {},}) =>
                 input={i}
                 setStateData={setStateData}
                 stateData={stateData}
-                errors = {errors}
+                errors={errors}
               />
             );
           })}
@@ -35,7 +43,7 @@ const Popup = ({ onClose, data, onSubmit, initialState, label ,errors = {},}) =>
               onClick={() => i.onSubmit(stateData)}
               className="w-full flex items-center justify-center h-[4.5rem] bg-gray-300 text-lg font-semibold"
             >
-              <p>{i.label}</p>
+              <p>{loader ? <ClipLoader size={25} /> : i.label}</p>
             </div>
           );
         })}

@@ -34,6 +34,7 @@ const Products = () => {
           type={type}
           setProducts={setProducts}
           setLoader={setLoader}
+          loader={loader}
         />
       )}
 

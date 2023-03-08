@@ -8,6 +8,7 @@ const ImagesHandler = ({ setStateData, stateData }) => {
   const fileInputRef = useRef();
   const [updatedImages, setUpdatedImages] = useState({});
 
+
   useEffect(() => {
     let aux = {};
     if (stateData.images) {
@@ -81,6 +82,32 @@ const ImagesHandler = ({ setStateData, stateData }) => {
               onChange={async (event) => {
                 const files = event.target.files;
 
+                if (files.length === 1) {
+                  let file = files[0];
+                  let fileName = file.name;
+                  let blob = URL.createObjectURL(file);
+                  let index = 0;
+                  setPreview({ ...preview, [index]: blob });
+                  setUpdatedImages({
+                    ...updatedImages,
+                    [index]: fileName,
+                  });
+
+                  let resizedFile = await resizeFile(file);
+                  setStateData({
+                    ...stateData,
+                    images: {
+                      ...stateData.images,
+                      [index]: resizedFile,
+                    },
+                    updatedImages: {
+                      ...updatedImages,
+                      [index]: fileName,
+                    },
+                  });
+                  return;
+                }
+
                 if (files.length > 0) {
                   setImages(files);
                   let previewImagesAux = {};
@@ -96,15 +123,11 @@ const ImagesHandler = ({ setStateData, stateData }) => {
                   let populateFiles = async () => {
                     for (let file of Object.entries(files)) {
                       let resizedFile = await resizeFile(file[1]);
-                      console.log({ resizedFile });
                       filesAux[file[0]] = resizedFile;
                     }
                   };
 
                   await populateFiles();
-
-
-                  
 
                   setStateData({ ...stateData, images: filesAux });
                 } else {
@@ -117,47 +140,143 @@ const ImagesHandler = ({ setStateData, stateData }) => {
               className="hidden"
             />
           </label>
-          <div className="w-full h-[10rem] bg-red-600 flex gap-4">
-            {Object.entries(preview).map((i, key) => {
-              // Hacer input que cambie la imagen en la posicion seleccionada
-              if (i[0] !== "0") {
-                return (
-                  <label
-                    className="flex flex-col overflow-hidden items-center justify-center w-[25rem] h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
-                    key={key}
-                  >
-                    <input
-                      onChange={(event) => {
-                        console.log("Hay cambio");
-                        let file = event.target.files[0];
-                        let fileName = file.name;
-                        let blob = URL.createObjectURL(file);
-                        let index = i[0];
-                        setPreview({ ...preview, [index]: blob });
-                        setUpdatedImages({
-                          ...updatedImages,
-                          [index]: fileName,
-                        });
 
-                        setStateData({
-                          ...stateData,
-                          images: { ...stateData.images, [index]: file },
-                          updatedImages: {
+          {Object.keys(preview).length && (
+            <div className="w-full h-[10rem] my-4 px-4 grid grid-cols-3 gap-4 ">
+              {Array.from({ length: 4 }, (i, key) => {
+                if (preview[key]) {
+                  return { [key]: preview[key] };
+                } else {
+                  return { [key]: null };
+                }
+              }).map((i, key) => {
+                if (i[key] && key !== 0) {
+                  return (
+                    <label
+                      className="flex flex-col overflow-hidden items-center justify-center w-full h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
+                      key={key}
+                    >
+                      <input
+                        onChange={async (event) => {
+                          let file = event.target.files[0];
+                          let fileName = file.name;
+                          let blob = URL.createObjectURL(file);
+                          let index = key;
+                          setPreview({ ...preview, [index]: blob });
+                          setUpdatedImages({
                             ...updatedImages,
                             [index]: fileName,
-                          },
-                        });
-                      }}
-                      className="hidden"
-                      id="dropzone-file"
-                      type="file"
-                    />
-                    <img className="w-[15rem]" src={i[1]} alt="" />
-                  </label>
-                );
-              }
-            })}
-          </div>
+                          });
+
+                          let resizedFile = await resizeFile(file);
+                          setStateData({
+                            ...stateData,
+                            images: {
+                              ...stateData.images,
+                              [index]: resizedFile,
+                            },
+                            updatedImages: {
+                              ...updatedImages,
+                              [index]: fileName,
+                            },
+                          });
+                        }}
+                        className="hidden"
+                        id="dropzone-file"
+                        type="file"
+                      />
+                      <img className="w-[15rem]" src={i[key]} alt="" />
+                    </label>
+                  );
+                } else {
+                  if (key !== 0) {
+                    console.log(i, "Por renderizar");
+                    return (
+                      <label
+                        className="flex flex-col overflow-hidden items-center  justify-center w-full h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
+                        key={key}
+                      >
+                        <input
+                          onChange={async (event) => {
+                            let file = event.target.files[0];
+                            let fileName = file.name;
+                            let blob = URL.createObjectURL(file);
+                            let index = key;
+                            setPreview({ ...preview, [index]: blob });
+                            setUpdatedImages({
+                              ...updatedImages,
+                              [index]: fileName,
+                            });
+
+                            let resizedFile = await resizeFile(file);
+                            setStateData({
+                              ...stateData,
+                              images: {
+                                ...stateData.images,
+                                [index]: resizedFile,
+                              },
+                              updatedImages: {
+                                ...updatedImages,
+                                [index]: fileName,
+                              },
+                            });
+                          }}
+                          className="hidden"
+                          id="dropzone-file"
+                          type="file"
+                        />
+                      </label>
+                    );
+                  }
+                }
+              })}
+            </div>
+          )}
+
+          {/* {Object.entries(preview).length < 4 && (
+            <div className="w-full h-[10rem] my-4 px-4 flex gap-4">
+              {Array.from({ length: 4 - Object.keys(preview).length }).map(
+                (i, key) => {
+                  return (
+                    <label
+                      className="flex flex-col overflow-hidden items-center  justify-center w-full h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
+                      key={key}
+                    >
+                      <input
+                        onChange={async (event) => {
+                          let file = event.target.files[0];
+                          let fileName = file.name;
+                          let blob = URL.createObjectURL(file);
+                          let index = key + 1;
+                          setPreview({ ...preview, [index]: blob });
+                          setUpdatedImages({
+                            ...updatedImages,
+                            [index]: fileName,
+                          });
+
+                          let resizedFile = await resizeFile(file);
+                          setStateData({
+                            ...stateData,
+                            images: {
+                              ...stateData.images,
+                              [index]: resizedFile,
+                            },
+                            updatedImages: {
+                              ...updatedImages,
+                              [index]: fileName,
+                            },
+                          });
+                        }}
+                        className="hidden"
+                        id="dropzone-file"
+                        type="file"
+                      />
+                    </label>
+                  );
+                }
+              )}
+            </div>
+          )} */}
         </div>
       </div>
     </div>

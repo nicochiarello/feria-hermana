@@ -13,9 +13,8 @@ export const getProducts = (setLoader, setProducts, cb) => {
       if (cb) {
         cb();
       }
-      console.log(res.data);
     })
-    .catch((err) => setErrors(err.response.data));
+    .catch((err) => console.log(err));
 };
 
 export const createProduct = (
@@ -31,33 +30,25 @@ export const createProduct = (
       `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/product/create`,
       product
     )
-    .then((res) => getProducts(setLoader, setProducts, cb))
+    .then(() => getProducts(setLoader, setProducts, cb))
     .catch((err) => setErrors(err.response.data));
 };
 
 export const updateProduct = async (
   updatedProduct,
   setProducts,
-  setErrors,
   setLoader,
   cb
 ) => {
-  // setLoader(true);
-  // let { _id } = updatedProduct;
-  console.log(updatedProduct)
-  const id = updatedProduct.get("_id")
-  console.log(id)
-  
-  // for (const value of updatedProduct.values()) {
-  //   console.log(value);
-  // }
+  setLoader(true)
+  const id = updatedProduct.get("_id");
   axios
     .put(
       `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/product/update/${id}`,
       updatedProduct
     )
-    .then((res) => console.log("Done!"));
-  // .catch((err) => setErrors(err.response.data));
+    .then(() => getProducts(setLoader, setProducts, cb))
+    .catch((err) => console.log(err.response));
 };
 
 export const deleteProduct = (id, setProducts, setLoader, cb) => {
