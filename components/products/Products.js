@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Fetcher from "./Fetcher";
 import { useRouter } from "next/router";
 import ProductsPagination from "./ProductsPagination";
@@ -8,6 +8,7 @@ import CreatorHandler from "./CreatorHandler";
 import { Toaster, toast } from "react-hot-toast";
 import Warning from "../warning/Warning";
 import { deleteProduct } from "../../utils/api/product.routes";
+import { getCategories } from "../../utils/api/categories.routes";
 
 const Products = () => {
   const router = useRouter();
@@ -19,6 +20,12 @@ const Products = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [type, setType] = useState(0);
   const [warningPopup, setWarningPopup] = useState(false);
+  const [categories, setCategories] = useState([])
+
+  useEffect(()=>{
+    getCategories(null, setCategories)
+  },[])
+
 
   return (
     <div className="w-full h-full overflow-y-scroll">
@@ -35,6 +42,7 @@ const Products = () => {
           setProducts={setProducts}
           setLoader={setLoader}
           loader={loader}
+          options={{categories}}
         />
       )}
 

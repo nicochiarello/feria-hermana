@@ -10,6 +10,7 @@ const CreatorHandler = ({
   setProducts,
   setLoader,
   loader,
+  options
 }) => {
   const propsCreator = (type, product) => {
     if (type === 0) {
@@ -24,10 +25,7 @@ const CreatorHandler = ({
               type: 2,
               label: "Categoría",
               stateName: "category",
-              options: [
-                { label: "Categoria 1", value: "cat1" },
-                { label: "Categoria 2", value: "cat2" },
-              ],
+              options: options.categories.map((i)=>{return {...i, label: i.name}}),
             },
             { type: 0, label: "Talle", stateName: "size" },
             {
@@ -87,10 +85,7 @@ const CreatorHandler = ({
               type: 2,
               label: "Categoría",
               stateName: "category",
-              options: [
-                { label: "Categoria 1", value: "cat1" },
-                { label: "Categoria 2", value: "cat2" },
-              ],
+              options: options.categories.map((i)=>{return {...i, label: i.name}}),
             },
             { type: 0, label: "Talle", stateName: "size" },
             {
