@@ -1,31 +1,19 @@
-import { useEffect, useState } from "react";
-import Fetcher from "./Fetcher";
-import { useRouter } from "next/router";
-import ProductsPagination from "./ProductsPagination";
-import ProductItem from "./ProductItem";
-import { ClipLoader } from "react-spinners";
-import CreatorHandler from "./CreatorHandler";
+import { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import Warning from "../warning/Warning";
-import { deleteProduct } from "../../utils/api/product.routes";
-import { getCategories } from "../../utils/api/categories.routes";
+import Fetcher from "./Fetcher";
+import { ClipLoader } from "react-spinners";
+import Withdrawalitem from "./Withdrawalitem";
+import CreatorHandler from "./CreatorHandler";
+import { deleteWithdrawal } from "../../utils/api/withdrawals.routes";
 
-const Products = () => {
-  const router = useRouter();
-  let { page } = router.query;
-  const [products, setProducts] = useState([]);
+const Withdrawals = () => {
+  const [withdrawals, setWithdrawals] = useState([]);
   const [loader, setLoader] = useState(false);
-  const [nbPages, setNbPages] = useState();
   const [popup, setPopup] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [type, setType] = useState(0);
   const [warningPopup, setWarningPopup] = useState(false);
-  const [categories, setCategories] = useState([])
-
-  useEffect(()=>{
-    getCategories(null, setCategories)
-  },[])
-
 
   return (
     <div className="w-full h-full overflow-y-scroll">
@@ -37,12 +25,11 @@ const Products = () => {
             setPopup(false);
             setSelectedItem(null);
           }}
-          product={selectedItem}
+          withdrawal={selectedItem}
           type={type}
-          setProducts={setProducts}
+          setWithdrawals={setWithdrawals}
           setLoader={setLoader}
           loader={loader}
-          options={{categories}}
         />
       )}
 
@@ -50,16 +37,15 @@ const Products = () => {
         <Warning
           onClose={() => setWarningPopup(false)}
           data={{
-            title: `Eliminar producto`,
-            info: `Eliminar este producto permanentemente? No puedes rehacer esto`,
+            title: `Eliminar retiro`,
+            info: `Eliminar este retiro permanentemente? No puedes rehacer esto`,
           }}
           onSubmit={() => {
             setWarningPopup(false);
             setLoader(true);
-            deleteProduct(selectedItem._id, setProducts, setLoader, () => {
+            deleteWithdrawal(selectedItem._id, setWithdrawals, setLoader, () => {
               setWarningPopup(false);
               toast.success("Eliminado exitosamente");
-     
             });
           }}
         />
@@ -73,39 +59,36 @@ const Products = () => {
       </div>
 
       <Fetcher
-        setData={setProducts}
+        setData={setWithdrawals}
         setLoader={setLoader}
-        page={page}
-        setNbPages={setNbPages}
-        url={`${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/products`}
+        url={`${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/withdrawals`}
       />
-      <ProductsPagination pages={nbPages} />
       <div className="w-full h-full flex flex-col gap-4">
         {loader ? (
           <div className="w-full h-full flex items-center justify-center">
             <ClipLoader size={150} />
           </div>
-        ) : products.length > 0 ? (
-          products.map((i) => {
+        ) : withdrawals.length > 0 ? (
+          withdrawals.map((i) => {
             return (
-              <ProductItem
+              <Withdrawalitem
                 key={i._id}
-                product={i}
-                onUpdate={(product) => {
+                withdrawal={i}
+                onUpdate={(withdrawal) => {
                   setType(1);
-                  setSelectedItem(product);
+                  setSelectedItem(withdrawal);
                   setPopup(true);
                 }}
-                onDelete={(product)=>{
-                  setSelectedItem(product);
-                  setWarningPopup(true)
+                onDelete={(withdrawal) => {
+                  setSelectedItem(withdrawal);
+                  setWarningPopup(true);
                 }}
               />
             );
           })
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <p>No se han encontrado productos</p>
+            <p>No se han encontrado retiros</p>
           </div>
         )}
       </div>
@@ -113,4 +96,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Withdrawals;

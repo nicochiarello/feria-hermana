@@ -13,7 +13,7 @@ const ImagesHandler = ({ setStateData, stateData }) => {
     let aux = {};
     if (stateData.images) {
       Object.entries(stateData.images).forEach((i) => {
-        aux = { ...aux, [i[0]]: i[1].secureUrl };
+        aux = { ...aux, [i[0]]: process.env.NEXT_PUBLIC_IMAGE_URL + "/" + i[1].secureUrl};
       });
     }
 
@@ -141,7 +141,7 @@ const ImagesHandler = ({ setStateData, stateData }) => {
             />
           </label>
 
-          {Object.keys(preview).length && (
+          {Object.keys(preview).length > 1 && (
             <div className="w-full h-[10rem] my-4 px-4 grid grid-cols-3 gap-4 ">
               {Array.from({ length: 4 }, (i, key) => {
                 if (preview[key]) {

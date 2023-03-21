@@ -1,6 +1,6 @@
 import React from 'react'
-import DashboardLayout from '../components/layouts/DashboardLayout'
-import Products from '../components/products/Products'
+import DashboardLayout from '../../components/layouts/DashboardLayout'
+import Products from '../../components/products/Products'
 
 const productos = () => {
   return (

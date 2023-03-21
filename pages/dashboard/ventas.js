@@ -1,6 +1,6 @@
 import React from "react";
-import DashboardLayout from "../components/layouts/DashboardLayout";
-import Sales from "../components/sales/Sales";
+import DashboardLayout from "../../components/layouts/DashboardLayout";
+import Sales from "../../components/sales/Sales";
 
 const ventas = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react'
-import Categories from '../components/categories/Categories'
-import DashboardLayout from '../components/layouts/DashboardLayout'
+import Categories from '../../components/categories/Categories'
+import DashboardLayout from '../../components/layouts/DashboardLayout'
 
 const categorias = () => {
   return (

@@ -19,7 +19,7 @@ const Sales = () => {
         url={`${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/orders/all`}
       />
 
-      <div className="w-full h-full flex flex-col gap-4 py-4">
+      <div className="w-full h-full flex flex-col gap-8 py-4">
         {loader ? (
           <div className="w-full h-full flex items-center justify-center">
             <ClipLoader size={150} />

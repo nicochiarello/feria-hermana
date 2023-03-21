@@ -102,8 +102,8 @@ const Categories = () => {
           </div>
         ))
       ) : (
-        <div>
-          <p>No hay</p>
+        <div className="w-full h-full flex items-center justify-center">
+          <p>No se encontraron categorias</p>
         </div>
       )}
     </div>

@@ -15,7 +15,7 @@ const InputsTypesHandler = ({ input, setStateData, stateData, errors }) => {
             })
           }
           placeholder={i.label}
-          className={`w-full py-1 px-2 rounded-lg ${
+          className={`w-full py-1 px-2 border rounded-lg ${
             errors[input.stateName] && "border border-red-600"
           }  `}
         />
@@ -41,7 +41,7 @@ const InputsTypesHandler = ({ input, setStateData, stateData, errors }) => {
             })
           }
           placeholder={i.label}
-          className={`w-full py-1 px-2 rounded-lg ${
+          className={`w-full py-1 px-2 border rounded-lg ${
             errors[input.stateName] && "border border-red-600"
           }  `}
         />
@@ -60,7 +60,7 @@ const InputsTypesHandler = ({ input, setStateData, stateData, errors }) => {
         <label>{i.label}</label>
         <select
           value={stateData[i.stateName]}
-          className="w-full py-1 px-2 rounded-lg"
+          className="w-full py-1 px-2 rounded-lg border"
           onChange={(e) =>
             setStateData({
               ...stateData,

@@ -6,7 +6,7 @@ const Navbar = ({section}) => {
   return (
     <nav
       className={`w-full text-white ${
-        opened ? "h-screen absolute top-0" : "h-[4rem]"
+        opened ? "h-screen absolute top-0 z-50" : "h-[4rem]"
       }  bg-black  `}
     >
       <div className="w-full h-[4rem]  flex items-center justify-between px-3 border-b">
@@ -21,17 +21,17 @@ const Navbar = ({section}) => {
       </div>
       {opened && (
         <div className="flex flex-col gap-3 py-6">
-          <Link href={"/productos"} className="w-full py-4 px-3">
+          <Link href={"/dashboard/productos"} className="w-full py-4 px-3">
             <p>Productos</p>
           </Link>
-          <Link href={"/ventas"} className="w-full py-4 px-3">
+          <Link href={"/dashboard/ventas"} className="w-full py-4 px-3">
             <p>Ventas</p>
           </Link>
-          <Link href={"/usuarios"} className="w-full py-4 px-3">
-            <p>Usuarios</p>
-          </Link>
-          <Link href={"/categorias"} className="w-full py-4 px-3">
+          <Link href={"/dashboard/categorias"} className="w-full py-4 px-3">
             <p>Categorias</p>
+          </Link>
+          <Link href={"/dashboard/retiros"} className="w-full py-4 px-3">
+            <p>Retiros</p>
           </Link>
         </div>
       )}
