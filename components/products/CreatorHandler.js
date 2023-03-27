@@ -10,6 +10,7 @@ const CreatorHandler = ({
   setProducts,
   setLoader,
   loader,
+  redirect,
   options
 }) => {
   const propsCreator = (type, product) => {
@@ -28,15 +29,6 @@ const CreatorHandler = ({
               options: options.categories.map((i)=>{return {...i, label: i.name}}),
             },
             { type: 0, label: "Talle", stateName: "size" },
-            {
-              type: 2,
-              label: "Sale",
-              stateName: "sale",
-              options: [
-                { value: true, label: "Si" },
-                { value: false, label: "No" },
-              ],
-            },
             { label: "Visible", stateName: "view" },
           ],
           buttons: [
@@ -51,7 +43,6 @@ const CreatorHandler = ({
 
                 if (Object.values(product.images).length) {
                   for (let image of Object.values(product.images)) {
-                    console.log(image);
                     formData.append("images", image);
                   }
                 }
@@ -64,7 +55,8 @@ const CreatorHandler = ({
                   () => {
                     onClose();
                     toast.success("Creado exitosamente");
-                  }
+                  },
+                  redirect
                 );
               },
             },
@@ -85,18 +77,9 @@ const CreatorHandler = ({
               type: 2,
               label: "Categoría",
               stateName: "category",
-              options: options.categories.map((i)=>{return {...i, label: i.name}}),
+              options: options.categories.map((i)=>{return {...i, label: i.name, value: i._id}}),
             },
             { type: 0, label: "Talle", stateName: "size" },
-            {
-              type: 2,
-              label: "Sale",
-              stateName: "sale",
-              options: [
-                { value: true, label: "Si" },
-                { value: false, label: "No" },
-              ],
-            },
             {
               type: 2,
               label: "Visible",
@@ -132,7 +115,7 @@ const CreatorHandler = ({
                 updateProduct(formData, setProducts, setLoader, () => {
                   onClose();
                   toast.success("Editado exitosamente");
-                });
+                }, redirect);
               },
             },
           ],

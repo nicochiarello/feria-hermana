@@ -2,7 +2,6 @@ import React from "react";
 import formatDate from "../../../utils/formatDate";
 
 const SaleItem = ({ item }) => {
-  console.log(item);
   return (
     <div className="w-full py-4 border-y px-4 flex flex-col gap-2">
       <p>Estado: {item.payment_status === 1 ? "Aprobado" : "Denegado / En espera"}</p>

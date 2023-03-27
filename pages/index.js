@@ -4,6 +4,7 @@ import { PulseLoader } from "react-spinners";
 import { useRouter } from "next/router";
 import Cookies from "universal-cookie";
 import axios from "axios";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   const router = useRouter();
@@ -26,15 +27,13 @@ export default function Home() {
       .then((res) => {
         setLoader(false);
         const cookies = new Cookies();
-        cookies.set("feriahermana_key", res.data.token, {
+        cookies.set(process.env.NEXT_PUBLIC_FH_KEY, res.data.token, {
           path: "/",
         });
-        router.push("/productos")
-        console.log(res);
+        router.push("/dashboard/productos?page=1")
       })
       .catch((err) => {
         setLoader(false);
-        console.log(err.response.data);
         setAuthError(err.response.data);
       });
   };
@@ -44,6 +43,7 @@ export default function Home() {
         <title>Feria Hermana Login</title>
       </Head>
       <div className="w-screen h-screen flex items-center justify-center px-2 bg-btn">
+        <Toaster/>
         <div className="px-2 py-4 w-full sm:max-w-full sm:w-fit h-[30rem] sm:h-fit sm:px-16 sm:py-16 bg-white text-black rounded-xl overflow-hidden flex  flex-col gap-10 justify-around">
           <div className="flex flex-col items-center justify-center text-2xl font-bold gap-4 w-full sm:w-[calc(20rem)]">
             <div className="w-[5rem] h-[5rem] bg-btn rounded-full flex items-center justify-center text-white">

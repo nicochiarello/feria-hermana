@@ -1,8 +1,14 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-const Navbar = ({section}) => {
-  const [opened, setOpened] = useState();
+const Navbar = ({ section }) => {
+  const [opened, setOpened] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setOpened(false);
+  }, [router]);
   return (
     <nav
       className={`w-full text-white ${
@@ -21,10 +27,13 @@ const Navbar = ({section}) => {
       </div>
       {opened && (
         <div className="flex flex-col gap-3 py-6">
-          <Link href={"/dashboard/productos"} className="w-full py-4 px-3">
+          <Link
+            href={"/dashboard/productos?page=1"}
+            className="w-full py-4 px-3"
+          >
             <p>Productos</p>
           </Link>
-          <Link href={"/dashboard/ventas"} className="w-full py-4 px-3">
+          <Link href={"/dashboard/ventas?page=1"} className="w-full py-4 px-3">
             <p>Ventas</p>
           </Link>
           <Link href={"/dashboard/categorias"} className="w-full py-4 px-3">

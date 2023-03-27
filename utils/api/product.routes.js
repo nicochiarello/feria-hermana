@@ -1,10 +1,9 @@
 import axios from "axios";
+import { authCookie } from "../getAuthCookie";
 
 export const getProducts = (setLoader, setProducts, cb) => {
   axios
-    .get(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/products`
-    )
+    .get(`${process.env.NEXT_PUBLIC_API}/api/products`)
     .then((res) => {
       if (setLoader) {
         setLoader(false);
@@ -17,21 +16,31 @@ export const getProducts = (setLoader, setProducts, cb) => {
     .catch((err) => console.log(err));
 };
 
-export const createProduct = (
+export const createProduct = async (
   product,
   setProducts,
   setErrors,
   setLoader,
-  cb
+  cb,
+  redirect
 ) => {
   setLoader(true);
   axios
-    .post(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/product/create`,
-      product
-    )
+    .post(`${process.env.NEXT_PUBLIC_API}/api/product/create`, product, {
+      headers: {
+        token: await authCookie(),
+      },
+    })
     .then(() => getProducts(setLoader, setProducts, cb))
-    .catch((err) => setErrors(err.response.data));
+    .catch((err) => {
+      let tokenErr = err.response.data.message.name;
+      console.log(tokenErr)
+      if (tokenErr === "JsonWebTokenError" || tokenErr === "TokenExpiredError") {
+        return redirect();
+      }
+      setErrors(err.response.data);
+      setLoader(false);
+    });
 };
 
 export const updateProduct = async (
@@ -40,21 +49,32 @@ export const updateProduct = async (
   setLoader,
   cb
 ) => {
-  setLoader(true)
+  setLoader(true);
   const id = updatedProduct.get("_id");
   axios
     .put(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/product/update/${id}`,
-      updatedProduct
+      `${process.env.NEXT_PUBLIC_API}/api/product/update/${id}`,
+      updatedProduct,
+      {
+        headers: {
+          token: await authCookie(),
+        },
+      }
     )
     .then(() => getProducts(setLoader, setProducts, cb))
-    .catch((err) => console.log(err.response));
+    .catch((err) => {
+      if (err.response.data.message === "JsonWebTokenError") {
+        return redirect();
+      }
+    });
 };
 
-export const deleteProduct = (id, setProducts, setLoader, cb) => {
+export const deleteProduct = async (id, setProducts, setLoader, cb) => {
   axios
-    .delete(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/product/delete/${id}`
-    )
+    .delete(`${process.env.NEXT_PUBLIC_API}/api/product/delete/${id}`, {
+      headers: {
+        token: await authCookie(),
+      },
+    })
     .then((res) => getProducts(setLoader, setProducts, cb));
 };

@@ -8,6 +8,7 @@ import Popup from "../popup/Popup";
 import { Toaster, toast } from "react-hot-toast";
 import Warning from "../warning/Warning";
 import { ClipLoader } from "react-spinners";
+import { useRouter } from "next/router";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -16,6 +17,7 @@ const Categories = () => {
   const [warningPopup, setWarningPopup] = useState(false);
   const [errors, setErrors] = useState({});
   const [selectedItem, setSelectedItem] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     getCategories(setLoader, setCategories);
@@ -43,6 +45,10 @@ const Categories = () => {
                     () => {
                       setPopup(false);
                       toast.success("Creado exitosamente");
+                    },
+                    () => {
+                      toast.error("La sesión caducó");
+                      router.push("/");
                     }
                   );
                 },
@@ -64,10 +70,19 @@ const Categories = () => {
           onSubmit={() => {
             setWarningPopup(false);
             setLoader(true);
-            deleteCategory(selectedItem, setCategories, setLoader, () => {
-              setWarningPopup(false);
-              toast.success("Eliminado exitosamente");
-            });
+            deleteCategory(
+              selectedItem,
+              setCategories,
+              setLoader,
+              () => {
+                setWarningPopup(false);
+                toast.success("Eliminado exitosamente");
+              },
+              () => {
+                toast.error("La sesión caducó");
+                router.push("/");
+              }
+            );
           }}
         />
       )}
@@ -81,7 +96,7 @@ const Categories = () => {
 
       {loader ? (
         <div className="w-full h-full flex items-center justify-center">
-          <ClipLoader size={150}/>
+          <ClipLoader size={150} />
         </div>
       ) : categories.length ? (
         categories.map((i) => (

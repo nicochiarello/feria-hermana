@@ -6,6 +6,7 @@ import { ClipLoader } from "react-spinners";
 import Withdrawalitem from "./Withdrawalitem";
 import CreatorHandler from "./CreatorHandler";
 import { deleteWithdrawal } from "../../utils/api/withdrawals.routes";
+import { useRouter } from "next/router";
 
 const Withdrawals = () => {
   const [withdrawals, setWithdrawals] = useState([]);
@@ -14,6 +15,7 @@ const Withdrawals = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [type, setType] = useState(0);
   const [warningPopup, setWarningPopup] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="w-full h-full overflow-y-scroll">
@@ -30,6 +32,10 @@ const Withdrawals = () => {
           setWithdrawals={setWithdrawals}
           setLoader={setLoader}
           loader={loader}
+          redirect={() => {
+            router.push("/");
+            toast.error("La sesión caducó");
+          }}
         />
       )}
 
@@ -43,10 +49,19 @@ const Withdrawals = () => {
           onSubmit={() => {
             setWarningPopup(false);
             setLoader(true);
-            deleteWithdrawal(selectedItem._id, setWithdrawals, setLoader, () => {
-              setWarningPopup(false);
-              toast.success("Eliminado exitosamente");
-            });
+            deleteWithdrawal(
+              selectedItem._id,
+              setWithdrawals,
+              setLoader,
+              () => {
+                setWarningPopup(false);
+                toast.success("Eliminado exitosamente");
+              },
+              () => {
+                router.push("/");
+                toast.error("La sesión caducó");
+              }
+            );
           }}
         />
       )}
@@ -61,7 +76,7 @@ const Withdrawals = () => {
       <Fetcher
         setData={setWithdrawals}
         setLoader={setLoader}
-        url={`${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/withdrawals`}
+        url={`${process.env.NEXT_PUBLIC_API}/api/withdrawals`}
       />
       <div className="w-full h-full flex flex-col gap-4">
         {loader ? (

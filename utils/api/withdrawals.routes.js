@@ -1,10 +1,9 @@
 import axios from "axios";
+import { authCookie } from "../getAuthCookie";
 
 export const getWithdrawals = (setLoader, setWithdrawals, cb) => {
   axios
-    .get(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/withdrawals`
-    )
+    .get(`${process.env.NEXT_PUBLIC_API}/api/withdrawals`)
     .then((res) => {
       if (setLoader) {
         setLoader(false);
@@ -17,25 +16,35 @@ export const getWithdrawals = (setLoader, setWithdrawals, cb) => {
     .catch((err) => console.log(err));
 };
 
-export const createWithDrawals = (
+export const createWithDrawals = async (
   withdrawals,
   setWithdrawals,
   setErrors,
   setLoader,
-  cb
+  cb,
+  redirect
 ) => {
   setLoader(true);
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/withdrawals/create`,
-      withdrawals
+      `${process.env.NEXT_PUBLIC_API}/api/withdrawals/create`,
+      withdrawals,
+      {
+        headers: {
+          token: await authCookie(),
+        },
+      }
     )
     .then(() => getWithdrawals(setLoader, setWithdrawals, cb))
-    .catch((err) =>{
-        setLoader(false)
-        console.log(err.response)
-         setErrors(err.response.data)
-        });
+    .catch((err) => {
+      let tokenErr = err.response.data.message?.name;
+      if (tokenErr === "JsonWebTokenError") {
+        return redirect();
+      }
+
+      setLoader(false);
+      setErrors(err.response.data);
+    });
 };
 
 export const updateWithdrawal = async (
@@ -43,23 +52,47 @@ export const updateWithdrawal = async (
   updatedWithdrawal,
   setWithdrawals,
   setLoader,
-  cb
+  cb,
+  redirect
 ) => {
   setLoader(true);
-  console.log(updatedWithdrawal)
   axios
     .put(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/withdrawals/update/${id}`,
-      updatedWithdrawal
+      `${process.env.NEXT_PUBLIC_API}/api/withdrawals/update/${id}`,
+      updatedWithdrawal,
+      {
+        headers: {
+          token: await authCookie(),
+        },
+      }
     )
     .then(() => getWithdrawals(setLoader, setWithdrawals, cb))
-    .catch((err) => console.log(err.response));
+    .catch((err) => {
+      let tokenErr = err.response.data.message?.name;
+      if (tokenErr === "JsonWebTokenError") {
+        return redirect();
+      }
+    });
 };
 
-export const deleteWithdrawal = (id, setWithdrawals, setLoader, cb) => {
+export const deleteWithdrawal = async (
+  id,
+  setWithdrawals,
+  setLoader,
+  cb,
+  redirect
+) => {
   axios
-    .delete(
-      `${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/withdrawals/delete/${id}`
-    )
-    .then((res) => getWithdrawals(setLoader, setWithdrawals, cb));
+    .delete(`${process.env.NEXT_PUBLIC_API}/api/withdrawals/delete/${id}`, {
+      headers: {
+        token: await authCookie(),
+      },
+    })
+    .then((res) => getWithdrawals(setLoader, setWithdrawals, cb))
+    .catch((err) => {
+      let tokenErr = err.response.data.message?.name;
+      if (tokenErr === "JsonWebTokenError") {
+        return redirect();
+      }
+    });
 };

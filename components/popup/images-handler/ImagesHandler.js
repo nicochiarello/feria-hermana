@@ -8,12 +8,14 @@ const ImagesHandler = ({ setStateData, stateData }) => {
   const fileInputRef = useRef();
   const [updatedImages, setUpdatedImages] = useState({});
 
-
   useEffect(() => {
     let aux = {};
     if (stateData.images) {
       Object.entries(stateData.images).forEach((i) => {
-        aux = { ...aux, [i[0]]: process.env.NEXT_PUBLIC_IMAGE_URL + "/" + i[1].secureUrl};
+        aux = {
+          ...aux,
+          [i[0]]: process.env.NEXT_PUBLIC_IMAGE_URL + "/" + i[1].secureUrl,
+        };
       });
     }
 
@@ -190,7 +192,6 @@ const ImagesHandler = ({ setStateData, stateData }) => {
                   );
                 } else {
                   if (key !== 0) {
-                    console.log(i, "Por renderizar");
                     return (
                       <label
                         className="flex flex-col overflow-hidden items-center  justify-center w-full h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
@@ -232,51 +233,6 @@ const ImagesHandler = ({ setStateData, stateData }) => {
               })}
             </div>
           )}
-
-          {/* {Object.entries(preview).length < 4 && (
-            <div className="w-full h-[10rem] my-4 px-4 flex gap-4">
-              {Array.from({ length: 4 - Object.keys(preview).length }).map(
-                (i, key) => {
-                  return (
-                    <label
-                      className="flex flex-col overflow-hidden items-center  justify-center w-full h-[10rem] border-2 border-gray-300 bg-gray-600 rounded-lg cursor-pointer"
-                      key={key}
-                    >
-                      <input
-                        onChange={async (event) => {
-                          let file = event.target.files[0];
-                          let fileName = file.name;
-                          let blob = URL.createObjectURL(file);
-                          let index = key + 1;
-                          setPreview({ ...preview, [index]: blob });
-                          setUpdatedImages({
-                            ...updatedImages,
-                            [index]: fileName,
-                          });
-
-                          let resizedFile = await resizeFile(file);
-                          setStateData({
-                            ...stateData,
-                            images: {
-                              ...stateData.images,
-                              [index]: resizedFile,
-                            },
-                            updatedImages: {
-                              ...updatedImages,
-                              [index]: fileName,
-                            },
-                          });
-                        }}
-                        className="hidden"
-                        id="dropzone-file"
-                        type="file"
-                      />
-                    </label>
-                  );
-                }
-              )}
-            </div>
-          )} */}
         </div>
       </div>
     </div>

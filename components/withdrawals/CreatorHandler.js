@@ -11,6 +11,7 @@ const CreatorHandler = ({
   setWithdrawals,
   setLoader,
   loader,
+  redirect
 }) => {
   const propsCreator = (type, withdrawal) => {
     if (type === 0) {
@@ -32,7 +33,8 @@ const CreatorHandler = ({
                   () => {
                     onClose();
                     toast.success("Creado exitosamente");
-                  }
+                  },
+                  redirect
                 );
               },
             },
@@ -60,7 +62,8 @@ const CreatorHandler = ({
                   () => {
                     onClose();
                     toast.success("Editado exitosamente");
-                  }
+                  },
+                  redirect
                 );
               },
             },

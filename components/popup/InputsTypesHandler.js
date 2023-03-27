@@ -73,7 +73,7 @@ const InputsTypesHandler = ({ input, setStateData, stateData, errors }) => {
           </option>
           {i.options.map((i, key) => {
             return (
-              <option value={i.value} key={key}>
+              <option value={i._id} key={key}>
                 {i.label}
               </option>
             );
