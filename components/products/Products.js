@@ -1,24 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Fetcher from "./Fetcher";
 import { useRouter } from "next/router";
 import ProductsPagination from "./ProductsPagination";
 import ProductItem from "./ProductItem";
 import { ClipLoader } from "react-spinners";
-import Popup from "../popup/Popup";
 import CreatorHandler from "./CreatorHandler";
+import { Toaster, toast } from "react-hot-toast";
+import Warning from "../warning/Warning";
+import { deleteProduct } from "../../utils/api/product.routes";
+import { getCategories } from "../../utils/api/categories.routes";
 
 const Products = () => {
   const router = useRouter();
-  let { page } = router.query;
+  const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
   const [loader, setLoader] = useState(false);
   const [nbPages, setNbPages] = useState();
   const [popup, setPopup] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [type, setType] = useState(0);
+  const [warningPopup, setWarningPopup] = useState(false);
+  const [categories, setCategories] = useState([])
+
+  useEffect(()=>{
+    getCategories(null, setCategories)
+  },[])
+
+  useEffect(() => {
+    if (router.query.page) {
+      setPage(+router.query.page);
+    }
+  }, [router.query]);
+
 
   return (
     <div className="w-full h-full overflow-y-scroll">
+      <Toaster />
       {popup && (
         <CreatorHandler
           onClose={() => {
@@ -28,12 +45,38 @@ const Products = () => {
           }}
           product={selectedItem}
           type={type}
+          setProducts={setProducts}
+          setLoader={setLoader}
+          loader={loader}
+          options={{categories}}
+          redirect={()=>{
+            toast.error("La sesión caducó")
+            router.push("/")}}
+        />
+      )}
+
+      {warningPopup && (
+        <Warning
+          onClose={() => setWarningPopup(false)}
+          data={{
+            title: `Eliminar producto`,
+            info: `Eliminar este producto permanentemente? No puedes rehacer esto`,
+          }}
+          onSubmit={() => {
+            setWarningPopup(false);
+            setLoader(true);
+            deleteProduct(selectedItem._id, setProducts, setLoader, () => {
+              setWarningPopup(false);
+              toast.success("Eliminado exitosamente");
+     
+            });
+          }}
         />
       )}
 
       <div
         onClick={() => setPopup(true)}
-        className="fixed bottom-4 right-2 w-[4rem] h-[4rem] rounded-full bg-blue-400 flex items-center justify-center cursor-pointer"
+        className="fixed bottom-4 right-2 w-[4rem] z-20 h-[4rem] rounded-full bg-blue-400 flex items-center justify-center cursor-pointer"
       >
         <i className="bx bx-plus text-3xl"></i>
       </div>
@@ -43,9 +86,11 @@ const Products = () => {
         setLoader={setLoader}
         page={page}
         setNbPages={setNbPages}
-        url={`${process.env.NEXT_PUBLIC_HOST}:${process.env.NEXT_PUBLIC_PORT}/api/products`}
+        url={`${process.env.NEXT_PUBLIC_API}/api/products`}
       />
-      <ProductsPagination pages={nbPages} />
+
+      <ProductsPagination pages={nbPages} page={page}/>
+      
       <div className="w-full h-full flex flex-col gap-4">
         {loader ? (
           <div className="w-full h-full flex items-center justify-center">
@@ -61,6 +106,10 @@ const Products = () => {
                   setType(1);
                   setSelectedItem(product);
                   setPopup(true);
+                }}
+                onDelete={(product)=>{
+                  setSelectedItem(product);
+                  setWarningPopup(true)
                 }}
               />
             );
