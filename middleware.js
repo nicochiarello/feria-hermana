@@ -1,26 +1,17 @@
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
 
-const secret = process.env.SECRET;
+// This function can be marked `async` if using `await` inside
+export function middleware(request) {
+  const { cookies, url, nextUrl } = request;
+  let pathname = nextUrl.pathname;
 
-export function middleware(req) {
-  let jwt = req.cookies.get("feriahermana_key");
-  const { origin } = req.nextUrl;
-  const url = req.url;
+  const authCookie = cookies.get(process.env.NEXT_PUBLIC_FH_KEY);
 
-  if (url.includes("/dashboard")) {
-    if (!jwt) {
-      return NextResponse.redirect(`${origin}/`);
-    }
-
-    try {
-      jwtVerify(jwt, secret);
-
-      return NextResponse.next();
-    } catch (error) {
-      return NextResponse.redirect(`${origin}/`);
-    }
+  if (!authCookie && pathname.includes("dashboard")) {
+    return NextResponse.redirect(process.env.APP_URI);
   }
 
-  return NextResponse.next();
+  if (authCookie && pathname === "/") {
+    return NextResponse.redirect(process.env.APP_URI + "/dashboard/productos");
+  }
 }
