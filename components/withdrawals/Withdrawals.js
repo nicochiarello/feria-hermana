@@ -76,7 +76,7 @@ const Withdrawals = () => {
       <Fetcher
         setData={setWithdrawals}
         setLoader={setLoader}
-        url={`${process.env.NEXT_PUBLIC_API}/api/withdrawals`}
+        url={`${process.env.NEXT_PUBLIC_API_URI}/api/withdrawals`}
       />
       <div className="w-full h-full flex flex-col gap-4">
         {loader ? (

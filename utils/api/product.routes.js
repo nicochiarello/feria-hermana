@@ -3,7 +3,7 @@ import { authCookie } from "../getAuthCookie";
 
 export const getProducts = (setLoader, setProducts, cb) => {
   axios
-    .get(`${process.env.NEXT_PUBLIC_API}/api/products`)
+    .get(`${process.env.NEXT_PUBLIC_API_URI}/api/products`)
     .then((res) => {
       if (setLoader) {
         setLoader(false);
@@ -26,15 +26,14 @@ export const createProduct = async (
 ) => {
   setLoader(true);
   axios
-    .post(`${process.env.NEXT_PUBLIC_API}/api/product/create`, product, {
+    .post(`${process.env.NEXT_PUBLIC_API_URI}/api/product/create`, product, {
       headers: {
         token: await authCookie(),
       },
     })
     .then(() => getProducts(setLoader, setProducts, cb))
     .catch((err) => {
-      let tokenErr = err.response.data.message.name;
-      console.log(tokenErr)
+      let tokenErr = err.response?.data?.message?.name;
       if (tokenErr === "JsonWebTokenError" || tokenErr === "TokenExpiredError") {
         return redirect();
       }
@@ -53,7 +52,7 @@ export const updateProduct = async (
   const id = updatedProduct.get("_id");
   axios
     .put(
-      `${process.env.NEXT_PUBLIC_API}/api/product/update/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URI}/api/product/update/${id}`,
       updatedProduct,
       {
         headers: {
@@ -71,7 +70,7 @@ export const updateProduct = async (
 
 export const deleteProduct = async (id, setProducts, setLoader, cb) => {
   axios
-    .delete(`${process.env.NEXT_PUBLIC_API}/api/product/delete/${id}`, {
+    .delete(`${process.env.NEXT_PUBLIC_API_URI}/api/product/delete/${id}`, {
       headers: {
         token: await authCookie(),
       },

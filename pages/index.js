@@ -20,7 +20,7 @@ export default function Home() {
     e.preventDefault();
     setLoader(true);
     axios
-      .post(`${process.env.NEXT_PUBLIC_API}/api/users/login`, formValues)
+      .post(`${process.env.NEXT_PUBLIC_API_URI}/api/users/login`, formValues)
       .then((res) => {
         setLoader(false);
         const cookies = new Cookies();

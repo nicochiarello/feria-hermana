@@ -3,7 +3,7 @@ import { authCookie } from "../getAuthCookie";
 
 export const getWithdrawals = (setLoader, setWithdrawals, cb) => {
   axios
-    .get(`${process.env.NEXT_PUBLIC_API}/api/withdrawals`)
+    .get(`${process.env.NEXT_PUBLIC_API_URI}/api/withdrawals`)
     .then((res) => {
       if (setLoader) {
         setLoader(false);
@@ -27,7 +27,7 @@ export const createWithDrawals = async (
   setLoader(true);
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_API}/api/withdrawals/create`,
+      `${process.env.NEXT_PUBLIC_API_URI}/api/withdrawals/create`,
       withdrawals,
       {
         headers: {
@@ -37,7 +37,7 @@ export const createWithDrawals = async (
     )
     .then(() => getWithdrawals(setLoader, setWithdrawals, cb))
     .catch((err) => {
-      let tokenErr = err.response.data.message?.name;
+      let tokenErr = err.response?.data?.message?.name;
       if (tokenErr === "JsonWebTokenError") {
         return redirect();
       }
@@ -58,7 +58,7 @@ export const updateWithdrawal = async (
   setLoader(true);
   axios
     .put(
-      `${process.env.NEXT_PUBLIC_API}/api/withdrawals/update/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URI}/api/withdrawals/update/${id}`,
       updatedWithdrawal,
       {
         headers: {
@@ -68,7 +68,7 @@ export const updateWithdrawal = async (
     )
     .then(() => getWithdrawals(setLoader, setWithdrawals, cb))
     .catch((err) => {
-      let tokenErr = err.response.data.message?.name;
+      let tokenErr = err.response?.data?.message?.name;
       if (tokenErr === "JsonWebTokenError") {
         return redirect();
       }
@@ -83,14 +83,14 @@ export const deleteWithdrawal = async (
   redirect
 ) => {
   axios
-    .delete(`${process.env.NEXT_PUBLIC_API}/api/withdrawals/delete/${id}`, {
+    .delete(`${process.env.NEXT_PUBLIC_API_URI}/api/withdrawals/delete/${id}`, {
       headers: {
         token: await authCookie(),
       },
     })
     .then((res) => getWithdrawals(setLoader, setWithdrawals, cb))
     .catch((err) => {
-      let tokenErr = err.response.data.message?.name;
+      let tokenErr = err.response?.data?.message?.name;
       if (tokenErr === "JsonWebTokenError") {
         return redirect();
       }

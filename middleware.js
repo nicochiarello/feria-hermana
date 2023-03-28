@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-// This function can be marked `async` if using `await` inside
 export function middleware(request) {
   const { cookies, url, nextUrl } = request;
   let pathname = nextUrl.pathname;
@@ -8,10 +7,10 @@ export function middleware(request) {
   const authCookie = cookies.get(process.env.NEXT_PUBLIC_FH_KEY);
 
   if (!authCookie && pathname.includes("dashboard")) {
-    return NextResponse.redirect(process.env.APP_URI);
+    return NextResponse.redirect(process.env.NEXT_PUBLIC_APP_URI);
   }
 
   if (authCookie && pathname === "/") {
-    return NextResponse.redirect(process.env.APP_URI + "/dashboard/productos");
+    return NextResponse.redirect(process.env.NEXT_PUBLIC_APP_URI + "/dashboard/productos");
   }
 }
