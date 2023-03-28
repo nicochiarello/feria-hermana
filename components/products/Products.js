@@ -9,6 +9,7 @@ import { Toaster, toast } from "react-hot-toast";
 import Warning from "../warning/Warning";
 import { deleteProduct } from "../../utils/api/product.routes";
 import { getCategories } from "../../utils/api/categories.routes";
+import Cookies from "universal-cookie";
 
 const Products = () => {
   const router = useRouter();
@@ -51,6 +52,8 @@ const Products = () => {
           options={{categories}}
           redirect={()=>{
             toast.error("La sesión caducó")
+            let cookies = new Cookies()
+            cookies.remove(process.env.NEXT_PUBLIC_FH_KEY)
             router.push("/")}}
         />
       )}

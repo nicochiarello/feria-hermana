@@ -7,10 +7,10 @@ export function middleware(request) {
   const authCookie = cookies.get(process.env.NEXT_PUBLIC_FH_KEY);
 
   if (!authCookie && pathname.includes("dashboard")) {
-    return NextResponse.redirect(process.env.APP_URI);
+    return NextResponse.redirect(process.env.NEXT_PUBLIC_APP_URI);
   }
 
   if (authCookie && pathname === "/") {
-    return NextResponse.redirect(process.env.APP_URI + "/dashboard/productos");
+    return NextResponse.redirect(process.env.NEXT_PUBLIC_APP_URI + "/dashboard/productos");
   }
 }
