@@ -4,7 +4,7 @@ import { authCookie } from "../getAuthCookie";
 export const getCategories = (setLoader, setCategories, cb) => {
   axios
     .get(
-      `${process.env.NEXT_PUBLIC_API}/api/categories`
+      `${process.env.NEXT_PUBLIC_API_URI}/api/categories`
     )
     .then((res) => {
       if (setLoader) {
@@ -29,7 +29,7 @@ export const createCategory = async (
   setLoader(true);
   axios
     .post(
-      `${process.env.NEXT_PUBLIC_API}/api/categories/create`,
+      `${process.env.NEXT_PUBLIC_API_URI}/api/categories/create`,
       category,
       {
         headers: {
@@ -39,7 +39,7 @@ export const createCategory = async (
     )
     .then(() => getCategories(setLoader, setCategories, cb))
     .catch((err) => {
-      let tokenErr = err.response.data.message?.name;
+      let tokenErr = err.response?.data?.message?.name;
       if (tokenErr === "JsonWebTokenError") {
         return redirect();
       }
@@ -51,7 +51,7 @@ export const createCategory = async (
 export const deleteCategory = async (id, setCategories, setLoader, cb, redirect) => {
   axios
     .delete(
-      `${process.env.NEXT_PUBLIC_API}/api/categories/delete/${id}`,     {
+      `${process.env.NEXT_PUBLIC_API_URI}/api/categories/delete/${id}`,     {
         headers: {
           token: await authCookie(),
         },
@@ -59,7 +59,7 @@ export const deleteCategory = async (id, setCategories, setLoader, cb, redirect)
     )
     .then((res) => getCategories(setLoader, setCategories, cb))
     .catch((err) => {
-      let tokenErr = err.response.data.message?.name;
+      let tokenErr = err.response?.data?.message?.name;
       if (tokenErr === "JsonWebTokenError") {
         return redirect();
       }

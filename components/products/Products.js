@@ -86,7 +86,7 @@ const Products = () => {
         setLoader={setLoader}
         page={page}
         setNbPages={setNbPages}
-        url={`${process.env.NEXT_PUBLIC_API}/api/products`}
+        url={`${process.env.NEXT_PUBLIC_API_URI}/api/products`}
       />
 
       <ProductsPagination pages={nbPages} page={page}/>

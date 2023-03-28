@@ -24,7 +24,7 @@ const Sales = () => {
         setLoader={setLoader}
         page={page}
         setNbPages={setNbPages}
-        url={`${process.env.NEXT_PUBLIC_API}/api/orders/all`}
+        url={`${process.env.NEXT_PUBLIC_API_URI}/api/orders/all`}
       />
 
       <div className="w-full h-full flex flex-col gap-8 py-4">
