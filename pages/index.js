@@ -54,7 +54,7 @@ export default function Home() {
 
               <input
                 onChange={(e) =>
-                  setFormValues({ ...formValues, email: e.target.value })
+                  setFormValues({ ...formValues, email: e.target.value.trim() })
                 }
                 value={formValues.email}
                 type="text"
@@ -76,7 +76,7 @@ export default function Home() {
                   <input
                     autoComplete="on"
                     onChange={(e) =>
-                      setFormValues({ ...formValues, password: e.target.value })
+                      setFormValues({ ...formValues, password: e.target.value.trim() })
                     }
                     value={formValues.password}
                     type={hiddenPassword ? "password" : "text"}
