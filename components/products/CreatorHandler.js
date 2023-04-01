@@ -35,6 +35,7 @@ const CreatorHandler = ({
             {
               label: "Crear",
               onSubmit: (product) => {
+                console.log(product)
                 let formData = new FormData();
 
                 for (let item in product) {
@@ -43,9 +44,12 @@ const CreatorHandler = ({
 
                 if (Object.values(product.images).length) {
                   for (let image of Object.values(product.images)) {
+                    console.log({image})
                     formData.append("images", image);
                   }
                 }
+
+                
 
                 createProduct(
                   formData,

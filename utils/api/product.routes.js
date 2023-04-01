@@ -39,6 +39,7 @@ export const createProduct = async (
       }
       setErrors(err.response.data);
       setLoader(false);
+      console.log(err.response)
     });
 };
 
@@ -48,6 +49,9 @@ export const updateProduct = async (
   setLoader,
   cb
 ) => {
+  for (var pair of updatedProduct.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]); 
+}
   setLoader(true);
   const id = updatedProduct.get("_id");
   axios
@@ -62,7 +66,8 @@ export const updateProduct = async (
     )
     .then(() => getProducts(setLoader, setProducts, cb))
     .catch((err) => {
-      if (err.response.data.message === "JsonWebTokenError") {
+      let tokenErr = err.response?.data?.message?.name;
+      if (tokenErr === "JsonWebTokenError" || tokenErr === "TokenExpiredError") {
         return redirect();
       }
     });
