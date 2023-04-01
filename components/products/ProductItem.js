@@ -5,7 +5,7 @@ const ProductItem = ({ product, onUpdate, onDelete }) => {
     <div className="w-full h-fit py-8 border-y flex flex-col gap-5 px-1 relative">
       <div className="flex gap-2 h-fit">
         <div className="w-[8rem] h-full bg-white">
-          {product.images && (
+          {product.images[0] && (
             <img
               className="w-full h-full object-cover"
               src={process.env.NEXT_PUBLIC_IMAGE_URL +
